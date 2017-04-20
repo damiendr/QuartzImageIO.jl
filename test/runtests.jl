@@ -1,4 +1,5 @@
 using Base.Test, FileIO, QuartzImageIO, ColorTypes, FixedPointNumbers, TestImages
+using OffsetArrays
 
 # Saving notes:
 # autumn_leaves and toucan fail as of November 2015. The "edges" of the
@@ -242,6 +243,14 @@ end
         end
         @test imgcmp == img
     end
+end
+
+@testset "OffsetArrays" begin
+    img = OffsetArray([true false; false true], 0:1, 3:4)
+    fn = joinpath(mydir, "indices.png")
+    QuartzImageIO.save(fn, img)
+    imgr = QuartzImageIO.load(fn)
+    @test imgr == parent(img)
 end
 
 rm(mydir, recursive=true)
